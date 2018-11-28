@@ -8,8 +8,7 @@
 <h3>Template only Glimmer Components</h3>
 <Kaese/>
 
-
-<h3>this</h3>
+<h3>action helper: this</h3>
 
 Normal: <Button @click={{action this.whoAmI}}>Normal</Button><br>
 
@@ -25,10 +24,31 @@ Double Pass: <DoubleNested @doIt={{action this.whoAmI}}/><br>
 
 Parent-Child: <Parent /><br>
 
-Object Context: <ObjectContext @parent={{this}} />
-
-
-<h3>Assigned this</h3>
+Object Context: <ObjectContext @parent={{this}} /><br>
 
 Assign Object Context: <AssignObjectContext @parent={{this}} /><br>
 Assign Parent: <AssignParent />
+
+
+<h3>bind helper: this</h3>
+
+Normal: <Button @click={{bind this.whoAmI}}>Normal</Button><br>
+
+Wrapped/Yielded:
+<BindWrapper @action={{bind this.whoAmI}} as |wrapper|>
+  <Button @click={{bind wrapper.action}}>Wrapped</Button>
+</BindWrapper>
+<br>
+
+Pass: <Nested @doIt={{bind this.whoAmI}}/><br>
+
+Double Pass: <DoubleNested @doIt={{bind this.whoAmI}}/><br>
+
+Parent-Child: <BindParent /><br>
+
+Object Context: <BindObjectContext @parent={{this}} /><br>
+
+Object Context with Target: <BindObjectContextWithTarget @parent={{this}} /><br>
+
+Assign Object Context: <BindAssignObjectContext @parent={{this}} /><br>
+Assign Parent: <BindAssignParent />

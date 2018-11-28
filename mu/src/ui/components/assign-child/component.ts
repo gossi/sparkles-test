@@ -1,9 +1,9 @@
 import Component from 'sparkles-component';
-import ParentComponent from 'sparkles-test/components/parent/component';
 import { arg } from 'sparkles-decorators';
+import AssignParentComponent from 'sparkles-test/src/ui/components/assign-parent/component';
 
 interface Args {
-  parent: ParentComponent;
+  parent: AssignParentComponent;
 }
 
 export default class AssignChildComponent extends Component<Args> {
