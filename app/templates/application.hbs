@@ -1,3 +1,35 @@
 <h2 id="title">Welcome to Ember</h2>
 
-{{outlet}}
+<h3>Invocation</h3>
+
+<sub/wurst/>
+
+
+<h3>Template only Glimmer Components</h3>
+<Kaese/><br>
+{{kaese}}
+
+
+<h3>this</h3>
+
+Normal: <Button @click={{action this.whoAmI}}>Normal</Button><br>
+
+Wrapped/Yielded:
+<ActionWrapper @action={{action this.whoAmI}} as |wrapper|>
+  <Button @click={{action wrapper.action}}>Wrapped</Button>
+</ActionWrapper>
+<br>
+
+Pass: <Nested @doIt={{action this.whoAmI}}/><br>
+
+Double Pass: <DoubleNested @doIt={{action this.whoAmI}}/><br>
+
+Parent-Child: <Parent /><br>
+
+Object Context: <ObjectContext @parent={{this}} />
+
+
+<h3>Assigned this</h3>
+
+Assign Object Context: <AssignObjectContext @parent={{this}} /><br>
+Assign Parent: <AssignParent />
