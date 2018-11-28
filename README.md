@@ -1,58 +1,48 @@
-# sparkles-test
+# Sparkles Test Repo
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This repo is created to test sparkles component use-cases. This is to get experience on how to use sparkles (as a PoC implementation for glimmer components) today in classic ember apps and how this will work in the future MU layout apps (and how they will be structured). The idea is to retrieve best practices that you can apply today and will continue to work with MU layout. Three different use-cases with various variations have been tested
 
-## Prerequisites
+1. Invocation
+2. Template only Glimmer Components
+3. `{{action}}` helper and the scope of `this`
 
-You will need the following things properly installed on your computer.
+These tests are run against a classic ember app and an ember MU app.
 
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/)
-* [Yarn](https://yarnpkg.com/)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+## Overview of the Results
 
-## Installation
+Some of these "tests" are red and are expected to be red. Some tests are red and were probably run under with wrong expectations. The question is whether these tests are bugs or whether the expectations are wrong.
 
-* `git clone <repository-url>` this repository
-* `cd sparkles-test`
-* `yarn install`
+![Results](results.png)
 
-## Running / Development
+A note on reading this:
 
-* `ember serve`
-* Visit your app at [http://localhost:4200](http://localhost:4200).
-* Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
+* For Invocation and Template only Glimmer Components the results show the found template, not found - but expected - template
+* For `this` the sheet shows the value of what `this` is. It is expected to always be `ApplicationController` (see below)
 
-### Code Generators
+## Invocation
 
-Make use of the many generators for code, try `ember help generate` for more details
+Invocation was probably the most easiest one to test. Some things that confuse me:
 
-### Running Tests
+* Invocation of (folder-)curly-brace components throwed an error in MU
+* Angle bracket component couldn't be resolved by its name that resides in a sub folder (= `<Wurst />`)
 
-* `ember test`
-* `ember test --server`
+## Template Only Glimmer Components
 
-### Linting
+Everything went well so far. Keep in mind, for classic apps there is a priority order in which template only components - if they happen to exist in two locations - are resolved.
 
-* `yarn lint:hbs`
-* `yarn lint:js`
-* `yarn lint:js --fix`
+## Scope of `this` when using `{{action}}` helper
 
-### Building
+Glimmer stops making use of embers `@action` hash. Actions aren't referenced by their name anymore, instead the method is passed down directly. Important part is, that they are run under the scope they are defined. That is being tested with this `ApplicationController` class:
 
-* `ember build` (development)
-* `ember build --environment production` (production)
+```js
+import Controller from '@ember/controller';
 
-### Deploying
+export default class ApplicationController extends Controller {
 
-Specify what it takes to deploy your app.
+  whoAmI() {
+    console.log('whoami', this);
+  }
+}
+```
 
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+This "action" is passed down as `{{action this.whoAmI}}` to all variations it is tested in. My expectation is that `this` should always be `ApplicationController`. In the past, I realised this wasn't always the case so I constructed plenty use-case variations to see which violate my expectations. The idea is from an application route/controller I can only pass my action method and whatever happens afterwards is out-of-control in the scope of the application route/controller. Whenever my action method is invoked from inside the components it is passed to, I want to rely on `this` being my `ApplicationController` anyway some weird/bad things happen on the way forth and back and whatever I put in is not what's returned (PS: There is a computer science term describing this immutability and reliability - but I'm just a sport scientist ¯\_(ツ)_/¯).
