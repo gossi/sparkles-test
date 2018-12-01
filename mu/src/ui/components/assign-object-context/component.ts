@@ -6,6 +6,5 @@ interface Args {
 }
 
 export default class AssignObjectContext extends SparklesComponent<Args> {
-
   @arg parent!: any;
 }
